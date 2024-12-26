@@ -18,7 +18,10 @@ resource "aws_autoscaling_group" "eks_node_group" {
   max_size             = 3
   min_size             = 1
   vpc_zone_identifier  = [aws_subnet.eks_subnet.id]
-  launch_template = aws_launch_template.eks_launch_configuration.id
+
+  launch_template {
+    id = aws_launch_template.eks_launch_configuration.id 
+    }
 }
 
 # IAM Instance Profile for worker nodes
