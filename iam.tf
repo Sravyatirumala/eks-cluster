@@ -76,20 +76,3 @@ resource "aws_iam_role_policy_attachment" "eks_node_policy_attachment_5" {
 
 # IAM role policy attachment for the worker nodes for the correct access
 
-resource "kubectl_config_map" "aws_auth" {
-  metadata {
-    name      = "aws-auth"
-    namespace = "kube-system"
-  }
-
-  data = {
-    mapRoles = jsonencode([
-      {
-        rolearn  = "arn:aws:iam::149536453166:role/${aws_iam_role.eks_node_role.name}"
-        username = "revanth"
-        groups   = ["system:masters"]
-      }
-    ])
-  }
-}
-
