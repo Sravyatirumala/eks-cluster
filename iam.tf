@@ -1,6 +1,6 @@
 # IAM role for eks
 
-resource "aws_iam_role" "eks" {
+resource "aws_iam_role" "eks_role" {
   name = "eks-cluster-demo"
   tags = {
     tag-key = "eks-cluster-demo"
