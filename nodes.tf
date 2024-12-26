@@ -4,8 +4,9 @@ resource "aws_launch_template" "eks_launch_configuration" {
   image_id      = "ami-0e2c8caa4b6378d8c" # Replace with the latest Amazon EKS optimized AMI
   instance_type = "t3.medium"
   vpc_security_group_ids = ["${aws_security_group.allow_all_traffic.id}"]
-  iam_instance_profile = aws_iam_instance_profile.eks_node_instance_profile.id
-
+  iam_instance_profile { 
+            name = aws_iam_instance_profile.eks_node_instance_profile.id
+          }
   lifecycle {
     create_before_destroy = true
   }
