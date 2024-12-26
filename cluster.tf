@@ -6,5 +6,5 @@ resource "aws_eks_cluster" "eks_cluster" {
     security_group_ids = [aws_security_group.allow_all_traffic.id]
   }
 
-  depends_on = [aws_iam_role_policy_attachment.eks_role_policy_attachment]
+  depends_on = [aws_iam_role_policy_attachment.eks-AmazonEKSClusterPolicy]
 }

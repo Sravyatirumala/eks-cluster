@@ -1,78 +1,66 @@
-# IAM role for EKS Cluster
-resource "aws_iam_role" "eks_role" {
-  name               = "eks-cluster-role"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action    = "sts:AssumeRole"
-        Principal = {
-          Service = "eks.amazonaws.com"
-        }
-        Effect    = "Allow"
-        Sid       = ""
-      },
-    ]
-  })
+# IAM role for eks
 
+resource "aws_iam_role" "eks" {
+  name = "eks-cluster-demo"
   tags = {
-    Name = "eks-cluster-role"
+    tag-key = "eks-cluster-demo"
   }
+
+  assume_role_policy = <<POLICY
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "Service": [
+                    "eks.amazonaws.com"
+                ]
+            },
+            "Action": "sts:AssumeRole"
+        }
+    ]
+}
+POLICY
 }
 
-# Attach EKS policies to IAM role for EKS Cluster
-resource "aws_iam_role_policy_attachment" "eks_role_policy_attachment" {
+# eks policy attachment
+
+resource "aws_iam_role_policy_attachment" "eks-AmazonEKSClusterPolicy" {
+  role       = aws_iam_role.eks.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.eks_role.name
 }
 
-# IAM role for EKS worker nodes
-resource "aws_iam_role" "eks_node_role" {
-  name               = "eks-node-role"
+# role for nodegroup
+
+resource "aws_iam_role" "nodes" {
+  name = "eks-node-group-nodes"
+
   assume_role_policy = jsonencode({
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Effect = "Allow"
+      Principal = {
+        Service = "ec2.amazonaws.com"
+      }
+    }]
     Version = "2012-10-17"
-    Statement = [
-      {
-        Action    = "sts:AssumeRole"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-        Effect    = "Allow"
-        Sid       = ""
-      },
-    ]
   })
-
-  tags = {
-    Name = "eks-node-role"
-  }
 }
 
-# Attach EKS node policies to IAM role for worker nodes
-resource "aws_iam_role_policy_attachment" "eks_node_policy_attachment" {
+# IAM policy attachment to nodegroup
+
+resource "aws_iam_role_policy_attachment" "nodes-AmazonEKSWorkerNodePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.eks_node_role.name
+  role       = aws_iam_role.nodes.name
 }
 
-resource "aws_iam_role_policy_attachment" "eks_node_policy_attachment_2" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.eks_node_role.name
-}
-
-resource "aws_iam_role_policy_attachment" "eks_node_policy_attachment_3" {
+resource "aws_iam_role_policy_attachment" "nodes-AmazonEKS_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.eks_node_role.name
+  role       = aws_iam_role.nodes.name
 }
 
-resource "aws_iam_role_policy_attachment" "eks_node_policy_attachment_4" {
-  policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
-  role       = aws_iam_role.eks_node_role.name
+resource "aws_iam_role_policy_attachment" "nodes-AmazonEC2ContainerRegistryReadOnly" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  role       = aws_iam_role.nodes.name
 }
-
-resource "aws_iam_role_policy_attachment" "eks_node_policy_attachment_5" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
-  role       = aws_iam_role.eks_node_role.name
-}
-
-# IAM role policy attachment for the worker nodes for the correct access
-
