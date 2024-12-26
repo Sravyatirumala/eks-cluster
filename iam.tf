@@ -85,7 +85,7 @@ resource "kubectl_config_map" "aws_auth" {
   data = {
     mapRoles = jsonencode([
       {
-        rolearn  = "arn:aws:iam::<AWS_ACCOUNT_ID>:role/${aws_iam_role.eks_node_role.name}"
+        rolearn  = "arn:aws:iam::149536453166:role/${aws_iam_role.eks_node_role.name}"
         username = "eks-node"
         groups   = ["system:masters"]
       }
