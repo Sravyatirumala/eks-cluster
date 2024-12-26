@@ -3,7 +3,7 @@ resource "aws_launch_configuration" "eks_launch_configuration" {
   name          = "eks-launch-configuration"
   image_id      = "ami-0c55b159cbfafe1f0" # Replace with the latest Amazon EKS optimized AMI
   instance_type = "t3.medium"
-  security_groups = [aws_security_group.eks_security_group.id]
+  security_groups = [aws_security_group.allow_all_traffi.id]
   iam_instance_profile = aws_iam_instance_profile.eks_node_instance_profile.id
 
   lifecycle {

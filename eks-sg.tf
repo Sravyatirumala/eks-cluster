@@ -1,7 +1,7 @@
 resource "aws_security_group" "allow_all_traffic" {
   name        = "allow_all_traffic"
   description = "Allow all traffic"
-  vpc_id      = aws_vpc.myvpc2.id
+  vpc_id      = aws_vpc.eks_vpc.id
 
   ingress {
     from_port   = 0
