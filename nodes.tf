@@ -1,6 +1,6 @@
-# Worker nodes launch configuration
+# Worker nodes launch template
 resource "aws_launch_template" "eks_launch_configuration" {
-  name          = "eks-launch-configuration"
+  name          = "eks-launch-template"
   image_id      = "ami-0e2c8caa4b6378d8c" # Replace with the latest Amazon EKS optimized AMI
   instance_type = "t3.medium"
   vpc_security_group_ids = ["${aws_security_group.allow_all_traffic.id}"]
@@ -18,7 +18,7 @@ resource "aws_autoscaling_group" "eks_node_group" {
   max_size             = 3
   min_size             = 1
   vpc_zone_identifier  = [aws_subnet.eks_subnet.id]
-  launch_configuration = aws_launch_template.eks_launch_configuration.id
+  launch_template = aws_launch_template.eks_launch_configuration.id
 }
 
 # IAM Instance Profile for worker nodes
