@@ -1,5 +1,5 @@
 # Worker nodes launch configuration
-resource "aws_launch_configuration" "eks_launch_configuration" {
+resource "aws_launch_template" "eks_launch_configuration" {
   name          = "eks-launch-configuration"
   image_id      = "ami-0e2c8caa4b6378d8c" # Replace with the latest Amazon EKS optimized AMI
   instance_type = "t3.medium"
