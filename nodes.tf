@@ -18,7 +18,9 @@ resource "aws_eks_node_group" "public-nodes" {
     max_size     = 3
     min_size     = 2
   }
-
+  tags = {
+   ExtraTag = "Kubenodes"
+      }
   update_config {
     max_unavailable = 1
   }
