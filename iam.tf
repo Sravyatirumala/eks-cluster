@@ -29,6 +29,36 @@ resource "aws_iam_role_policy_attachment" "eks-AmazonEKSClusterPolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
+# Custom Policy for EKS Cluster Access
+resource "aws_iam_policy" "eks_custom_access" {
+  name        = "EKSDescribeAccess"
+  description = "Custom EKS read-only access policy"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "eks:DescribeCluster",
+          "eks:ListClusters",
+          "eks:DescribeNodegroup",
+          "eks:ListNodegroups",
+          "eks:ListUpdates",
+          "eks:AccessKubernetesApi"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+# Attach the custom policy to EKS Cluster Role
+resource "aws_iam_role_policy_attachment" "eks-custom-access-attachment" {
+  role       = aws_iam_role.eks_role.name
+  policy_arn = aws_iam_policy.eks_custom_access.arn
+}
+
 # EKS Worker Node Role
 resource "aws_iam_role" "nodes" {
   name = "eks-node-group-nodes"
@@ -69,7 +99,7 @@ resource "aws_iam_policy" "nodes-ebs-policy" {
   description = "EBS permissions for EKS node group"
 
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [
       {
         Action = [
@@ -77,8 +107,8 @@ resource "aws_iam_policy" "nodes-ebs-policy" {
           "ec2:AttachVolume",
           "ec2:DescribeVolumes",
           "ec2:DeleteVolume"
-        ]
-        Effect   = "Allow"
+        ],
+        Effect   = "Allow",
         Resource = "*"
       }
     ]
