@@ -154,7 +154,7 @@ resource "aws_iam_role" "ebs_csi_driver_irsa" {
         Action = "sts:AssumeRoleWithWebIdentity",
         Condition = {
           StringEquals = {
-            "${replace(data.aws_eks_cluster.this.identity[0].oidc.issuer, "https://", "")}:sub" = "system:serviceaccount:kube-system:ebs-csi-controller-sa"
+            "${replace(data.aws_eks_cluster.this.identity.oidc.issuer, "https://", "")}:sub" = "system:serviceaccount:kube-system:ebs-csi-controller-sa"
           }
         }
       }
