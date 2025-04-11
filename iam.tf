@@ -137,7 +137,7 @@ data "aws_eks_cluster_auth" "this" {
 }
 
 data "aws_iam_openid_connect_provider" "this" {
-  url = data.aws_eks_cluster.this.identity.oidc.issuer
+  url = data.aws_eks_cluster.this.identity[0].oidc.issuer
 }
 
 resource "aws_iam_role" "ebs_csi_driver_irsa" {
@@ -154,7 +154,7 @@ resource "aws_iam_role" "ebs_csi_driver_irsa" {
         Action = "sts:AssumeRoleWithWebIdentity",
         Condition = {
           StringEquals = {
-            "${replace(data.aws_eks_cluster.this.identity.oidc.issuer, "https://", "")}:sub" = "system:serviceaccount:kube-system:ebs-csi-controller-sa"
+            "${replace(data.aws_eks_cluster.this.identity[0].oidc.issuer, "https://", "")}:sub" = "system:serviceaccount:kube-system:ebs-csi-controller-sa"
           }
         }
       }
